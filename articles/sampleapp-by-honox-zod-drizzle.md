@@ -15,7 +15,7 @@ published: false
 3. 開発チームは私ひとり。
 
 筆者自身は、ISUCON10,11,12,13でPerlへの移植作業をしたり、[YAPC::Hiroshima 2024](https://yapcjapan.org/2024hiroshima/) の主催だったりと、Perlで生活しています。
-フロント側でTypeScriptを書くことはあっても、バックエンドのTypeScript関連の技術スタックは業務で利用したことはなく、勘で書いてる感じです。運用した時にどうなるかはまだ謎です。
+今回採用したTypeScrip関連の技術スタックは、フロント側を書くことはあっても、バックエンドは業務で利用したことはなく、勘で書いてる感じです。
 
 ## 採用した技術スタックとその採用理由
 
@@ -39,5 +39,14 @@ published: false
 
 ### TypeScript
 
-フロントエンドを書く時、エコシステムの豊富さ、開発体験の都合、JSX以外の選択肢はないと思い、私一人で開発するなら、バックエンドもTypeScriptで書いてみようと思いました。
+Webアプリケーションで、フロントエンドを書く時、JSX以外の選択肢はないと思っています。
+今回の要件的に、スケールのことは考えなくて良く、私ひとりで開発するならば、バックエンドもTypeScriptで書いてみようと思いました。
+
+一休さん、トグルさん、ピクスタさんの採用事例みて、共感する部分も多かったですし。
+https://speakerdeck.com/yasaichi/architecture-decision-for-the-next-10-years-at-pixta
+https://speakerdeck.com/naoya/typescript-guan-shu-xing-sutairudebatukuendokai-fa-noriaru
 https://speakerdeck.com/susan1129/honoxdedong-kasuapurikesiyonnoriaru
+
+### Bun
+
+何でtypescriptを処理しようか考えると、denoやnodejsも考えたけれど、
