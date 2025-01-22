@@ -8,14 +8,15 @@ published: false
 
 ## はじめに
 
-次の要件を満たす社内向けWebアプリケーションを作るにあたり、[サンプルのTODOアプリケーションを作成した](https://github.com/kfly8/sample-todoapp-honox-zod-drizzle)ので、その紹介と感想を書きます。
+次の3つの要件を満たす社内向けWebアプリケーションを作るにあたり、[サンプルのTODOアプリケーションを作成した](https://github.com/kfly8/sample-todoapp-honox-zod-drizzle)ので、その紹介と感想を書きます。
 
 1. セルフホストが簡単。特にデータは、自身で管理、所持できる
 2. ソースを公開した際に、改変がしやすそうな技術スタックを利用したい。できたら面白そうなのがいい
-3. 開発チームは私ひとり。
+3. 開発チームは私ひとり。企画も営業も私。認知負荷は下げたい。
 
 筆者自身は、ISUCON10,11,12,13でPerlへの移植作業をしたり、[YAPC::Hiroshima 2024](https://yapcjapan.org/2024hiroshima/) の主催だったりと、Perlで生活しています。
-今回採用したTypeScrip関連の技術スタックは、フロント側を書くことはあっても、バックエンドは業務で利用したことはなく、勘で書いてる感じです。
+今回採用したTypeScrip関連の技術スタックは、フロント側を書くことはあっても、バックエンドは業務で利用したことはなく、勘で書いてる感じです😅
+変なこと言ってたら、椅子を投げてください！
 
 ## 採用した技術スタックとその採用理由
 
@@ -40,7 +41,7 @@ published: false
 ### TypeScript
 
 Webアプリケーションで、フロントエンドを書く時、JSX以外の選択肢はないと思っています。
-今回の要件的に、スケールのことは考えなくて良く、私ひとりで開発するならば、バックエンドもTypeScriptで書いてみようと思いました。
+今回の要件的に、スケールのことは考えなくて良く、言語切り替えの認知負荷を下げるため、バックエンドもTypeScriptで書いてみようと思いました。
 
 一休さん、トグルさん、ピクスタさんの採用事例みて、共感する部分も多かったですし。
 https://speakerdeck.com/yasaichi/architecture-decision-for-the-next-10-years-at-pixta
@@ -49,4 +50,8 @@ https://speakerdeck.com/susan1129/honoxdedong-kasuapurikesiyonnoriaru
 
 ### Bun
 
-何でtypescriptを処理しようか考えると、denoやnodejsも考えたけれど、
+TypeScriptを処理するのに何が良いか考えると、denoも惹かれましたが、Bunに何でも入っている感じがしたので採用しました。
+BunにSQLiteのドライバーやら、テスティングフレームワークも入ったりして気合いがすごいと思いました。
+
+### Hono と HonoX
+
