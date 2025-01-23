@@ -30,11 +30,9 @@ published: false
 - Database / ORM
     - [SQLite](https://www.sqlite.org/)
     - [drizzle](https://orm.drizzle.team/)
-- Validation, Data Modeling
+- Validation, Domain Modeling
     - [Zod](https://zod.dev/)
 - misc
-    - [Bun test](https://bun.sh/docs/cli/test)
-    - [Tailwind CSS](https://tailwindcss.com/)
     - [neverthrow](https://github.com/supermacro/neverthrow)
         - Result type for TypeScript / To Handle expected errors
 
@@ -51,16 +49,18 @@ https://speakerdeck.com/susan1129/honoxdedong-kasuapurikesiyonnoriaru
 
 ### Bun
 
-TypeScriptを処理するのに何が良いか考えると、denoも惹かれましたが、Bunには何でも入っている感じがしたので採用しました。
-ビルドツール、SQLiteのドライバー、テスティングフレームワークなどなど入っていて、異常な気合いを感じます。
-もし問題があっても代替手段がありそうなので、気軽に採用しています。
+TypeScriptを処理するのに何が良いか考えると、Bunには何でも入っている感じがしたので採用しました。
+例えば、テストを書くのに、Bun.testを利用してます。jestっぽく書けて、超高速ということなので。
+
+Bunは、All in oneをうたってますが、まさにその通りで、異常な気合いを感じます。
+もし枝葉に問題があっても代替手段がありそうなので、気軽に採用しています。
 
 ### Hono と HonoX
 
 @yusukebeさんが書いてるフレームワークなので、以前からhonoのことは知っていて、ずっと使う機会を伺っていました。
 (調べるとhonoのinitial commitから2.5ヶ月後のYAPCで登壇されていたようです
 https://x.com/yusukebe/status/1499989656124858373 )
-(honoをPerlに移植するponoというのを書いていて、アプリケーションは開発してないけれどソースは読んでいる)
+(honoをPerlに移植するponoというのを書いていて、アプリケーションは開発してないけれどソースは読んでいる状態)
 
 なので、honoは面白そう！という気持ちで選んでます。
 ソースコード込みで、コアがシンプルですし、Web標準に沿ってるので、運用はどうにでもなりそうな感じがしてます。
@@ -74,6 +74,25 @@ Obsidianのようにメモごとにファイルを用意するのもシンプル
 
 ### Drizzle ORM
 
-Prizma と Bunのsqlで悩みました。
-SQLの実行計画が想像しにくいと、
+実行計画が想像しやすく、型によるサポートが強いものを選びました。
+Prizma と Bun.sql も良さそうとは思うのですが。
+
+### Zod
+
+他のバリデーション関連のモジュールが観測範囲に入れられてないからですね。
+PerlのType::Tiny や Pozと似てるので馴染みやすかったです。
+
+特殊なこととして、ドメインモデリングもZodに大半を任せる設計にしました。それは後述します。
+
+### neverthrow
+
+想定してるエラーは、型情報に現れた方がハンドリングしやすく漏れないので利用してます。
+
+## 採用された設計
+
+こんなことをやりたいと感じて、設計しました。
+
+- ドメインはドメインに集中して、インフラの知識は別問題として切り離したい
+- 冗長さがあっても、単調な作りにしたい。単純過ぎてあくびが出る感じの作りがいい。
+
 
