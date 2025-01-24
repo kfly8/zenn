@@ -38,61 +38,93 @@ published: false
 
 ### TypeScript
 
-Webアプリケーションのテンプレートは、TSX以外で書きたくないと思えるくらい体験が良いと思います。
+Webアプリケーションのビューは、TSX以外で書きたくないと思えるくらい体験に違いがあると思っています。
 加えて、今回の要件的に、スケールのことは考えなくて良く、言語切り替えの認知負荷を下げたいので、
 フロントエンド、バックエンド両方ともTypeScriptで書いてみようと思いました。
 
-一休さん、トグルさん、ピクスタさんの採用事例みて、共感する部分も多かったです。
-https://speakerdeck.com/yasaichi/architecture-decision-for-the-next-10-years-at-pixta
-https://speakerdeck.com/naoya/typescript-guan-shu-xing-sutairudebatukuendokai-fa-noriaru
-https://speakerdeck.com/susan1129/honoxdedong-kasuapurikesiyonnoriaru
+一休さん、Toggleさん、ピクスタさんの採用事例みて、多分に影響を受けています。
+- https://speakerdeck.com/naoya/typescript-guan-shu-xing-sutairudebatukuendokai-fa-noriaru
+- https://speakerdeck.com/susan1129/honoxdedong-kasuapurikesiyonnoriaru
+- https://speakerdeck.com/yasaichi/architecture-decision-for-the-next-10-years-at-pixta
 
 ### Bun
 
-TypeScriptを処理するのに何が良いか考えると、Bunには何でも入っている感じがしたので採用しました。
-例えば、テストを書くのに、Bun.testを利用してます。jestっぽく書けて、超高速ということなので。
-
-Bunは、All in oneをうたってますが、まさにその通りで、異常な気合いを感じます。
-もし枝葉に問題があっても代替手段がありそうなので、気軽に採用しています。
+TypeScriptを処理するのにBunを選びました。Bunには何でも入っていて、一人開発の負担を減らせそうです。例えば、テスティングフレームワークがバンドルされていて、jestっぽく書けて、超高速です。最近、1.2が出ていましたが、異常な気合いで何でも入ってる感じがします。
 
 ### Hono と HonoX
 
-@yusukebeさんが書いてるフレームワークなので、以前からhonoのことは知っていて、ずっと使う機会を伺っていました。
-(調べるとhonoのinitial commitから2.5ヶ月後のYAPCで登壇されていたようです
-https://x.com/yusukebe/status/1499989656124858373 )
-(honoをPerlに移植するponoというのを書いていて、アプリケーションは開発してないけれどソースは読んでいる状態)
+Honoはずっと使う機会を伺っていました。正直、面白そう！という気持ちで選んでます。
 
-なので、honoは面白そう！という気持ちで選んでます。
-ソースコード込みで、コアがシンプルですし、Web標準に沿ってるので、運用はどうにでもなりそうな感じがしてます。
-honoxは、楽して開発を始められそうなので使い始めました。
+@yusukebeさんが書いてるフレームワークなので以前からHonoのことは知っていて、
+調べると、Honoのinitial commitから2.5ヶ月後のYAPCで登壇されていたようです。
+https://x.com/yusukebe/status/1499989656124858373 
+
+[HonoをPerlに移植するPono](https://github.com/kfly8/pono)を細々と書いてるのですが、
+ソースコード混みで、コアがシンプルで、Web標準にも沿っているので、運用はどうにでもなりそうな感じがしてます。
+（型関連のコードは雰囲気で読んでて、実装より三段くらい難しい印象を受けています）
+
+HonoXは、Vite周りの設定を省略して開発を始められそうなので使い始めました。
 
 ### SQLite
 
 SQLiteならデータは一枚のファイルに収まるので、データを管理、所持する要件にお手軽に合いそうです。
-Obsidianのようにメモごとにファイルを用意するのもシンプルな構成で理にかなってると思いますが、
-少なくともTODOアプリ作るなら、SQLiteで十分だと思います。
 
 ### Drizzle ORM
 
-実行計画が想像しやすく、型によるサポートが強いものを選びました。
-Prizma と Bun.sql も良さそうとは思うのですが。
+SQLの実行計画が想像しやすく、型によるサポートが強いものを選びました。
 
 ### Zod
 
-他のバリデーション関連のモジュールが観測範囲に入れられてないからですね。
-PerlのType::Tiny や Pozと似てるので馴染みやすかったです。
+他を知らないので、積極的な理由はなく、馴染みがあったので選んでます。
 
-特殊なこととして、ドメインモデリングもZodに大半を任せる設計にしました。それは後述します。
+普段、Perlの型制約ライブラリのType::Tinyを使い倒しているのですが、それと似た感覚で使ってます。
+[ZodをPerlに移植するPoz](https://metacpan.org/pod/Poz)を読んでいた影響もあります。
+
+詳しくは後述しますが、ドメインモデリングもZodに大半を任せる設計にしました。
 
 ### neverthrow
 
-想定してるエラーは、型情報に現れた方がハンドリングしやすく漏れないので利用してます。
+想定してるエラーは、型情報に現れた方がハンドリング漏れしないので利用してます。
 
 ## 採用された設計
 
-こんなことをやりたいと感じて、設計しました。
+次をやりたいと感じて、設計しました。
 
-- ドメインはドメインに集中して、インフラの知識は別問題として切り離したい
-- 冗長さがあっても、単調な作りにしたい。単純過ぎてあくびが出る感じの作りがいい。
+- ドメインはドメインに集中して、インフラの知識は別問題として切り離したい。逆も然り。
+- 単調な作りにしたい。単純過ぎてあくびが出る感じの作りがいい。
 
-
+```bash
+app
+├── client.ts
+├── cmd
+│   ├── CreateTodoCmd.test.ts
+│   ├── CreateTodoCmd.ts
+│   ├── UpdateTodoCmd.test.ts
+│   └── UpdateTodoCmd.ts
+├── components
+│   └── Layout.tsx
+├── domain
+│   ├── todo.ts
+│   ├── todoService.test.ts
+│   └── todoService.ts
+├── infra
+│   ├── CreateTodoRepository.test.ts
+│   ├── CreateTodoRepository.ts
+│   ├── UpdateTodoRepository.test.ts
+│   ├── UpdateTodoRepository.ts
+│   ├── index.ts
+│   ├── schema.ts
+│   └── types.ts
+├── islands
+│   ├── HeaderIsland
+│   └── TodoIsland
+├── routes
+│   ├── _404.tsx
+│   ├── _error.tsx
+│   ├── _middleware.ts
+│   ├── _renderer.tsx
+│   ├── api
+│   └── index.tsx
+├── server.ts
+└── style.css
+```
