@@ -191,16 +191,18 @@ export type Todo = z.infer<typeof todoSchema>;
 
 細かいですが、データを一意に識別するidはbrand型で定義して、idの取り違えといったバグの予防をしています。
 
-```
-export const todoIdSchema = z.string().brand<"TodoId">();
+```typescript
+const todoIdSchema = z.string().brand<"TodoId">();
 ```
 
 ZodとTypeScriptであれば、簡便にデータの詳細を記述できるのでよかったです。
-このデータを、コマンドパターンとリポジトリパターンでSQLiteに永続化しています。詳細は割愛します。
+このデータを、コマンドパターンとリポジトリパターンでSQLiteに永続化しています。詳細は割愛します！
+(もう少し複雑でないとこの辺は面白みがないですね)
 
-Zodで定義したスキーマとdrizzleのスキーマで型が合わない場面は、Zod側/ドメイン側を優先して変換しています。例えば、次のコードは、completedがundefinedの場合、falseに変換をしています。
+Zodで定義したスキーマとdrizzleのスキーマで型が合わない場面は、Zod側/ドメイン側を優先して変換しました。例えば、次のコードは、completedがundefinedの場合、falseに変換をしています。
+こういった変換は本質的でないので、どうにかしたいです。(ORMのスキーマが、Zodで定義されていたとしたら、良い？)
 
-```
+```typescript
 async function saveTodo(
 	tx: TX,
 	data: Pick<Todo, "id" | "completed" | "title" | "description" | "authorId">,
