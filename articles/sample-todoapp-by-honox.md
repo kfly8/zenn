@@ -160,12 +160,34 @@ islandsに配置するコンポーネントの粒度や構成の自由度は高�
 WIP: ドメインモデル1 に対して、テーブルは複数ある関係
 WIP: 型の帳尻合わせ
 
-## その他、落ち穂ひろい
+## 試行錯誤中のこと
 
-- アイランドアーキテクチャが良さそう
-    - アイランドアーキテクチャのアイデアは、バックエンドでHTMLを返して、クライアント側でインタラクションできるようにするという素朴なもの
-    - HonoXのハイドレーションは素朴で、良い
-        - HTMLの構造は変わってるので、そこの調整は入りそうな気がするけれど、わからない
+### HonoXのcreateRouteの利用とRPC
+
+HonoXでルーティングする時、Honoを直で利用するかcreateRouteを利用するか迷った。自由度は低い方が可読性は高いと思い、結局、createRouteに寄せた。けれど、HonoXでAPIのRPCをしたい時、createRouteに寄せると、RPC用の型をどう作れば良いか悩んだ。結局、DRYではないけれど、RPCしたいエンドポイントを手動で集約した。
+
+https://github.com/kfly8/sample-todoapp-honox-zod-drizzle/blob/06dc286b450ec924d7afca626a3caaff4f4d15bc/app/routes/api/RPC.ts#L3-L14
+
+server.ts で定義しているAppをうまいこと参照すれば、DRYにできそうな気はするけれど、やれていない。
+ルーティングに直でHonoを利用すれば、この悩みはなくなるが、悩ましい。
+
+### アイランドアーキテクチャが素朴
+
+HonoX v0.1.33 時点のアイランドアーキテクチャは、自分で用意したHTMLを`<honox-island>`でラップする作りになっていて、とても素朴で理解しやすかったです。バックエンドでなるだけ処理して、HTMLを返す時にインタラクションするための情報を埋め込むアイランドアーキテクチャのアイデア通りの実装で、挙動にびっくりすることがなさそうです。
+
+```jsx
+<honox-island component-name="/app/islands/TodoIsland/index.tsx" data-serialized-props="[シリアライズされたデータ]" data-hono-hydrated="true">
+   <ul>
+       <li>タスク1</li>
+       <li>タスク2</li>
+    </ul>
+</honox-island>
+``` 
+
+ンポーネントをislandにするかどうかで`<honox-island>`でラップするかどうかの違いがありDOM構造が変わるので、そこは注意が必要そうに見えています。こちらに関連するissueはあり、見守りたいと思います。
+https://github.com/honojs/honox/issues/158
+
+基本islandにいれるようにすれば、あまり問題にならない気もしているので、もう少し使い込んでみたいです。
 
 ## まとめ
 
