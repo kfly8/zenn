@@ -187,18 +187,39 @@ export const todoSchema = z.object({
 
 export type Todo = z.infer<typeof todoSchema>;
 
+export type CreateTodoParams = Omit<Todo, "id">;
 
+export function createTodo(params: CreateTodoParams) {
+	const todo = {
+		...params,
+		// default values
+		description: params.description ?? "",
+		completed: params.completed ?? false,
+		assigneeIds: params.assigneeIds ?? [],
+		id: createTodoId(),
+	};
+
+	const parsed = todoSchema.safeParse(todo);
+	if (parsed.error) {
+		return err(parsed.error);
+	}
+
+	return ok(parsed.data);
+}
 ```
 
-細かいですが、データを一意に識別するidはbrand型で定義して、idの取り違えといったバグの予防をしています。
+細かいですが、データを一意に識別するidはbrand型で定義して、idの取り違えといったバグの予防をしています。Todo自身はbrand型にしていません。idがbrandingされていれば識別で間違える可能性は低いと考えて、取り回しのし易さを優先しています。
 
 ```typescript
 const todoIdSchema = z.string().brand<"TodoId">();
 ```
 
 ZodとTypeScriptであれば、簡便にデータの詳細を記述できるのでよかったです。
-このデータを、コマンドパターンとリポジトリパターンでSQLiteに永続化しています。詳細は割愛します！
-(もう少し複雑でないとこの辺は面白みがないですね)
+このデータを、コマンドパターンとリポジトリパターンでSQLiteに永続化しています。
+
+コマンドパターンは、アプリケーションの操作をオブジェクト化して、executeメソッドで呼びだすように実装しています。
+こういったコンベンションのおかげで、アプリケーションの操作を一貫したやり方で行えて、実用的だと思います。
+
 
 Zodで定義したスキーマとdrizzleのスキーマで型が合わない場面は、Zod側/ドメイン側を優先して変換しました。例えば、次のコードは、completedがundefinedの場合、falseに変換をしています。
 こういった変換は本質的でないので、どうにかしたいです。(ORMのスキーマが、Zodで定義されていたとしたら、良い？)
