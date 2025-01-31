@@ -15,7 +15,7 @@ published: false
 - 要件3. 開発チームは私ひとり。企画も営業も私。認知負荷は下げたい。
 
 筆者自身は、ISUCON10,11,12,13でPerlへの移植作業をしたり、[YAPC::Hiroshima 2024](https://yapcjapan.org/2024hiroshima/) の運営だったりと、Perlで生活しています。
-今回採用したTypeScript関連の経験は、フロント側はあっても、バックエンド側は皆無で、勘で書いてる感じです。変なこと言ってたら、椅子を投げてください！
+今回採用したTypeScript関連のバックエンド処理の経験は皆無です。用語を間違って使っていたりしたら、椅子を投げてください🙇
 
 ## 採用した技術スタックとその採用理由
 
@@ -52,15 +52,16 @@ Webアプリケーションのビューは、TSX以外で書きたくないと�
 
 Honoを選んだ理由ですが、合理的な理由もありますが、Hono 面白そう！という気持ちが隠せないです。
 
-調べてみると、yusukebeさんがHonoの最初のコミットをして2.5ヶ月後に、YAPCのトークがあったようです。それから、2年くらい経ってます。
+調べてみると、yusukebeさんがHonoの最初のコミットをして2.5ヶ月後に、YAPCのトークがあったようです。それからもう2年くらい経ってます。
 https://x.com/yusukebe/status/1499989656124858373 
 
-[HonoをPerlに移植するPono](https://github.com/kfly8/pono)を細々と書いていて、ソースコードはなぜか読んでました。
-Honoはソースコード込みで、コアがシンプルで、Web標準にも沿っているので、運用はどうにでもなりそうな感じがして好きです。
+なぜか、[HonoをPerlに移植するPono](https://github.com/kfly8/pono)を細々と書いていて、ソースコードは読んでいて、
+Honoはソースコード込みで、コアがシンプルだと感じていました。(Honoの型関連のコードは、実処理より三段階くらい難しく感じていて、こちらは勘で読んでます。)
+加えて、Web標準にも沿っているので、運用はどうにでもなりそうな感じがして好みです。
 
 HonoXは、Vite周りの設定を省略して開発を始められそうなことと、ファイルベースルーティングで単調なつくりにしやすそうなので選びました。
 
-### その他
+### その他の選んだ理由
 
 - SQLite
     - SQLiteならデータは一枚のファイルに収まるので、データを管理、所持する要件にお手軽に合いそうです。
@@ -75,9 +76,18 @@ HonoXは、Vite周りの設定を省略して開発を始められそうなこ�
 - tailwindcss v4
     - [ここ数年のYAPCのLPが、tailwindcssで作られていて](https://yapcjapan.org)、馴染みがあるくらいの理由です。最近出たv4にしても、すんなり動いてます。
 
-蛇足ですが、ReactとNext.jsは採用していません。
-Reactを利用しない積極的な理由はなく、hono/jsxでどこまでできるのか試してみたかったからです。表現したいUIやライブラリの対応状況次第では、Reactでレンダリングするように変更すると思います。
-また、HonoXを利用すれば、Viteとの統合、ファイルベースルーティング、アイランドアーキテクチャはあるので、現時点でNext.jsを採用する理由が浮かんでいないです。
+### 採用していない技術スタックについての蛇足
+
+蛇足ですが、採用しなかった技術スタックについても少し触れておきます。
+
+- React
+    - Reactを積極的に利用しない理由はなく、hono/jsxでどこまでできるのか試してみたかったので今は利用していないだけです。
+    - 表現したいUIやライブラリの対応状況次第では、Reactでレンダリングするように変更すると思います。
+    - ただ、依存しないで済むならその方が良いと思っています。
+- Next.js
+    - HonoXを利用すれば、Viteとの統合、ファイルベースルーティング、アイランドアーキテクチャはあるので、現時点でNext.jsを採用する理由が浮かんでいないです。
+
+----
 
 ## 採用したアーキテクチャ
 
@@ -86,7 +96,7 @@ Reactを利用しない積極的な理由はなく、hono/jsxでどこまでで�
 - ドメインはドメインに集中して、インフラの知識は別問題として切り離したい。逆も然り。
 - 単純過ぎてあくびが出るくらい単調な作りにしたい。
 
-こちらを踏まえて、依存の逆転、コマンドパターンなどを利用しています。以下、具体的にみていきたいと思います。
+こちらを踏まえて、依存の逆転、コマンドパターン、リポジトリパターンを利用しています。以下、具体的にみていきたいと思います。
 
 ### ディレクトリ構成
 
@@ -94,42 +104,42 @@ Reactを利用しない積極的な理由はなく、hono/jsxでどこまでで�
 
 ```bash
 app
-├── client.ts                         ... HonoX標準のクライアントのエントリーポイント
-├── server.ts                         ... HonoX標準のサーバーのエントリーポイント
-├── style.css                         ... tailwindcssのエントリーポイント
+├── client.ts ... HonoX標準のクライアントのエントリーポイント
+├── server.ts ... HonoX標準のサーバーのエントリーポイント
+├── style.css ... tailwindcssのエントリーポイント
 │
-├── cmd                               ... コマンドパターンの実装
-│   ├── CreateTodoCmd.ts              ... e.g. Todo作成のコマンド、永続化を行うRepositoryの定義も含む
-│   └── UpdateTodoCmd.ts              ... e.g. Todo更新のコマンド、永続化を行うRepositoryの定義も含む
+├── cmd ... コマンドパターンの実装
+│   ├── CreateTodoCmd.ts ... e.g. Todo作成のコマンド、永続化を行うRepositoryの定義も含む
+│   └── UpdateTodoCmd.ts ... e.g. Todo更新のコマンド、永続化を行うRepositoryの定義も含む
 │
-├── domain                            ... ドメインモデル、および、サービスの実装
-│   ├── todo.ts                       ... e.g. Todoのドメインモデル / Zodで表現している
-│   └── todoService.ts                ... e.g. Todoのサービス / 純粋関数
+├── domain ... ドメインモデル、および、サービスの実装
+│   ├── todo.ts ... e.g. Todoのドメインモデル / Zodで表現している
+│   └── todoService.ts ... e.g. Todoのサービス / 純粋関数
 │
-├── infra                             ... インフラとのやりとり
-│   ├── CreateTodoRepository.ts       ... e.g. Todoの永続化を、CreateTodoCmdのRepository定義に従って行う
-│   ├── UpdateTodoRepository.ts       ... e.g. Todoの永続化を、UpdateTodoCmdのRepository定義に従って行う
+├── infra ... インフラとのやりとり
+│   ├── CreateTodoRepository.ts ... e.g. Todoの永続化を、CreateTodoCmdのRepository定義に従って行う
+│   ├── UpdateTodoRepository.ts ... e.g. Todoの永続化を、UpdateTodoCmdのRepository定義に従って行う
 │   ├── index.ts
-│   ├── schema.ts                     ... drizzle-orm用のスキーマ定義
+│   ├── schema.ts ... drizzle-orm用のスキーマ定義
 │   └── types.ts
 │
-├── islands                           ... HonoX標準のアイランドアーキテクチャ
+├── islands ... HonoX標準のアイランドアーキテクチャのコンポーネント配置
 │   ├── HeaderIsland
 │   └── TodoIsland
 │
-└── routes                            ... HonoX標準のファイルベースルーティング
+└── routes ... HonoX標準のファイルベースルーティング
     ├── index.ts
     └── api
-        ├── RPC.ts                    ... hono/client 用にルーティングの型を定義している
+        ├── RPC.ts ... hono/client 用にルーティングの型を定義している
         └── todo
-            └── [id].ts               ... e.g. /api/todo/:id のルーティング。UpdateTodoCmdを呼び出してる。
+            └── [id].ts ... e.g. /api/todo/:id のルーティング。UpdateTodoCmdを呼び出してる。
 ```
 
-### routesとislands
+### routesとislandsについて
 
 routesとislandsはHonoXの標準機能です。routesでファイルベースルーティングを行い、islandsにクライアント側でインタラクションのあるコンポーネントを配置しています。
 
-islandsに配置するコンポーネントの粒度や構成の自由度は高いので、少し悩みました。結果的には、`HeaderIsland`、`TodoIsland` といった大きめのコンポーネントを作成し、その中に細かいコンポーネントを自由に配置するようにしました。
+islandsに配置するコンポーネントの粒度や構成の自由度は高いので、判断に少し悩みました。結果的には、`HeaderIsland`、`TodoIsland` といった大きめのコンポーネントを作成し、その中に細かいコンポーネントを自由に配置するようにしました。
 
 ![](/images/sample-todoapp-by-honox/islands.jpg)
 
@@ -142,20 +152,38 @@ islandsに配置するコンポーネントの粒度や構成の自由度は高�
  └── types.ts
 ```
 
-理由は大きく2つです。
+こういった判断をした理由は、大きく2つあります。
 1. Todoアプリにしても社内向けのツールにしても、インタラクションが全くないコンポーネントの抽出は難しい
-    - → コンポーネントは基本、islandsに配置すると割り切り
+    - → コンポーネントは基本、islandsに配置すると割り切っても良いのではないか？
 2. コンポーネントは運用開発しながら諸々変更しやすい方が良い
     - → `XXXIsland`といったroutesから呼び出される入口のコンポーネントを用意。その中身のコンポーネントは、`XXXIsland`外では利用させない。
     - 結果、`XXXIsland`配下の変更の自由度が高い
 
-気をつけた方が良さそうなことは理由1の影響です。
-どれもislandsに置くとクライアント側で読み込むハイドレーション用のJavaScriptを読み込みが増えそうです。
-今回は、ハイドレーションのJSを304 Not Modifiedで返すように調整しました。
-具体的には、hono/vite-build/bun だと304 Not Modifiedで配信する方法がわからなかったので、代わりにhono/vite-build を利用して、自前で静的ファイルのルーティングを行っています。
-まだ調整の余地がありそうです。
+1つ目の理由に関しては心配事があります。どれもislandsに置くとクライアント側で読み込むハイドレーション用のJavaScriptを読み込み増加が問題になるのではないか？と心配しています。
 
-### domainとcmdとinfra
+今回は、ハイドレーションのJSを304 Not Modifiedで返せるように調整しました。具体的には、hono/vite-build/bun でEtagを指定する方法がわからなかったので、代わりにhono/vite-build を利用して、自前で静的ファイルのルーティングを行っています。まだ調整の余地がありそうです。
+
+### domainとcmdとinfra について
+
+賛否ありそうな割り切りをしています。
+
+まず、ドメインモデルは、Zodで定義しています。ドメインモデルにふるまいを持たせたくなかったので、Zodで定義するとそういったふるまいの欠落したオブジェクトに自然となりました。
+ふるまいは別途純粋関数として用意して、明に呼び出す形にしています。
+
+```typescript
+export const todoSchema = z.object({
+	id: todoIdSchema,
+	title: z.string().min(1).max(100),
+	description: z.string().max(1000).optional(),
+	completed: z.boolean().optional(),
+	authorId: userIdSchema,
+	assigneeIds: z.array(userIdSchema).optional(),
+});
+
+export type Todo = z.infer<typeof todoSchema>;
+```
+
+
 
 WIP: ドメインモデル1 に対して、テーブルは複数ある関係
 WIP: 型の帳尻合わせ
