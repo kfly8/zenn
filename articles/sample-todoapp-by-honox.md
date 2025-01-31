@@ -174,8 +174,7 @@ SPAを扱っていたときは、随分沢山クライアントにJavaScriptを�
 
 ### domainとcmdとinfra について
 
-振る舞いを全く持たないドメインモデルを、次のようにZodで定義して、スキーマと型をどこからでも利用できる状態にしています。
-振る舞いは、Result型を返す純粋関数として実装しています。
+ドメインモデルは次のようにZodで定義して、振る舞いはResult型を返す純粋関数として実装しています。
 
 ```typescript
 export const todoSchema = z.object({
@@ -190,12 +189,26 @@ export const todoSchema = z.object({
 export type Todo = z.infer<typeof todoSchema>;
 ```
 
-このTodoモデルのidentifyするidはbrand型で定義して、TypeScriptの構造的部分型を補強するようにしてみました。
+細かいですが、データを一意に識別するidはbrand型で定義して、idの取り違えといったバグの予防をしています。
 
 ```
 export const todoIdSchema = z.string().brand<"TodoId">();
-export type TodoId = z.infer<typeof todoIdSchema>;
-export const createTodoId = () => generateId() as TodoId;
+```
+
+ZodとTypeScriptであれば、簡便にデータの詳細を記述できるのでよかったです。
+このデータを、コマンドパターンとリポジトリパターンでSQLiteに永続化しています。詳細は割愛します。
+
+Zodで定義したスキーマとdrizzleのスキーマで型が合わない場面は、Zod側/ドメイン側を優先して変換しています。例えば、次のコードは、completedがundefinedの場合、falseに変換をしています。
+
+```
+async function saveTodo(
+	tx: TX,
+	data: Pick<Todo, "id" | "completed" | "title" | "description" | "authorId">,
+) {
+	const { completed, ...rest } = data;
+	// transform undefined to false
+	await tx.insert(todos).values({ ...rest, completed: !!completed });
+}
 ```
 
 ## 試行錯誤中のこと
