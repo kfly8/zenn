@@ -35,7 +35,7 @@ published: false
     - [Zod](https://zod.dev/)
 - misc
     - [neverthrow](https://github.com/supermacro/neverthrow)
-    - [tailwindcss v4](https://tailwindcss.com/)
+    - [Tailwind CSS v4](https://tailwindcss.com/)
 
 ### TypeScript と Bun を選んだ理由
 
@@ -43,11 +43,11 @@ Webアプリケーションのビューは、TSX以外で書きたくないと�
 
 一休さん、トグルホールディングスさん、ピクスタさんの採用事例に影響を受けています。
 
-<script defer class="speakerdeck-embed" data-id="cb2e31ccf3c44779893bfd4eb0f86dca" data-ratio="1.7777777777777777" src="//speakerdeck.com/assets/embed.js"></script>
+@[speakerdeck](cb2e31ccf3c44779893bfd4eb0f86dca)
 
-<script defer class="speakerdeck-embed" data-id="df251937942c48d3a773d93b6ccd4bcc" data-ratio="1.7772511848341233" src="//speakerdeck.com/assets/embed.js"></script>
+@[speakerdeck](df251937942c48d3a773d93b6ccd4bcc)
 
-<script defer class="speakerdeck-embed" data-id="c8556affd0f3401388af6d664d320c42" data-ratio="1.7777777777777777" src="//speakerdeck.com/assets/embed.js"></script>
+@[speakerdeck](c8556affd0f3401388af6d664d320c42)
 
 また、TypeScriptの処理はBunに任せました。Bunには何でも入っていて、一人開発の負担を減らせそうです。例えば、テスティングフレームワークがバンドルされていて、超高速に動作するようです。[最近、1.2が出ていました](https://bun.sh/blog/bun-v1.2)が、異常な気合いで何でも入ってる感じがします。
 
@@ -55,7 +55,7 @@ Webアプリケーションのビューは、TSX以外で書きたくないと�
 
 Honoを選んだ理由ですが、合理的な理由もありますが「Hono 面白そう！」という気持ちで選んでることは隠せないです。
 
-調べてみると、yusukebeさんがHonoの最初のコミットをして2.5ヶ月後に、YAPCのトークがあったようです。それから2年も経ってます。
+調べてみると、yusukebeさんがHonoの最初のコミットをして2.5ヶ月後に、YAPCのトークがあったようです。それから2年も経ってしまいました。
 https://x.com/yusukebe/status/1499989656124858373 
 
 [HonoをPerlに移植するPono](https://github.com/kfly8/pono)を細々と書いていて、なぜかHonoのソースコードはよく読んでいます。それもあって、Honoはソースコード込みで、コアがシンプルだと感じています。(Honoの型関連のコードは、実処理より三段階くらい難しく感じていて、こちらは勘で読んでます☺️)
@@ -76,8 +76,9 @@ HonoXは、Vite周りの設定を省略して開発を始められそうなこ�
     - 後述しますが、ドメインモデリングもZodに大半を任せる設計にしました。
 - neverthrow
     - TypeScriptにResult型を提供するモジュールです。想定内のエラーは型情報に現れた方がハンドリング漏れしないので利用してます。
-- tailwindcss v4
-    - [ここ数年のYAPCのLPが、tailwindcssで作られていて](https://yapcjapan.org)、馴染みがあるくらいの理由です。最近出たv4にしても、すんなり動いてます。
+- Tailwind CSS v4
+    - UIライブラリが豊富なので、選んでます。
+    - 最近リリースされたv4でも、すんなり動いています。
 
 ### 採用していない技術スタックについて
 
@@ -87,7 +88,7 @@ HonoXは、Vite周りの設定を省略して開発を始められそうなこ�
     - hono/jsxでどこまでできるのか試してみたかったので、たまたま利用していないだけです。
     - 表現したいUIやライブラリの状況次第では、Reactに変更すると思います。
     - ただ、依存は少ない方が管理が楽になるので、依存しないで済む世界観になったら良いと思っています。
-- Bun sql
+- [Bun sql](https://bun.sh/docs/api/sql)
     - 慣れたSELECT文で書けることは魅力ですが、型によるサポートが弱い印象があり、今回見送っています。
     - 薄く作るならこれで十分だろうと感じています。
 
@@ -98,7 +99,7 @@ HonoXは、Vite周りの設定を省略して開発を始められそうなこ�
 ただのTodoアプリですが、後々変更しやすい別のアプリケーションを作りたいので、ちょっと凝った作りにしています。例えば、こんなことを意識しています。
 
 - ドメインはドメインに集中して、インフラの知識は別問題として切り離したい。逆も然り。
-- 単純過ぎてあくびが出るくらい単調な作りにしたい
+- 単純過ぎてあくびが出るくらい退屈な作りにしたい
 
 こちらを踏まえて、依存の逆転、コマンドパターン、リポジトリパターンを利用しています。以下、具体的にみていきたいと思います。
 
@@ -110,7 +111,7 @@ HonoXは、Vite周りの設定を省略して開発を始められそうなこ�
 app
 ├── client.ts ... HonoX標準のクライアントのエントリーポイント
 ├── server.ts ... HonoX標準のサーバーのエントリーポイント
-├── style.css ... tailwindcssのエントリーポイント
+├── style.css ... Tailwind CSSのエントリーポイント
 │
 ├── cmd ... コマンドパターンの実装
 │   ├── CreateTodoCmd.ts ... e.g. Todo作成のコマンド、永続化を行うRepositoryの定義も含む
@@ -268,10 +269,12 @@ export class CreateTodoCmd implements Cmd {
 }
 ```
 
-
 このCreateTodoCmdのリポジトリのインフラの実装は、ここに置いてます。
 https://github.com/kfly8/sample-todoapp-honox-zod-drizzle/blob/main/app/infra/CreateTodoRepository.ts
 
+
+総じて、ドメインとインフラの分離ができているので、それぞれ変更しやすいアーキテクチャになっていると感じています。
+このアーキテクチャが単純過ぎて、あくびがでるかはちょっとわからないです。
 
 ## 感想や試行錯誤中のこと
 
@@ -294,7 +297,7 @@ Zodで定義したスキーマとdrizzleのスキーマで型が合わなかっ�
 
 ### アイランドアーキテクチャが素朴
 
-HonoX v0.1.33 時点のアイランドアーキテクチャは、`<honox-island>`でラップする作りになっていて、素朴で理解しやすかったです。この実装を初めて読んだ時、シンプル！これでいけるんだ！と関心しました。（もちろん、これだけで実装で全て完結しているわけではないですが...）
+HonoX v0.1.33 時点のアイランドアーキテクチャは、`<honox-island>`でラップする作りになっていて、素朴で理解しやすかったです。この実装を初めて読んだ時、シンプル！これでいけるんだ！と興奮しました。（もちろん、これだけで実装で全て完結しているわけではないですが...）
 
 ```html
 <honox-island component-name="/app/islands/TodoIsland/index.tsx" data-serialized-props="[シリアライズされたデータ]" data-hono-hydrated="true">
@@ -307,12 +310,9 @@ HonoX v0.1.33 時点のアイランドアーキテクチャは、`<honox-island>
 
 [Preact作者のJason Miller氏のこの記事](https://jasonformat.com/islands-architecture/)を読んで、そもそも、アイランドアーキテクチャのアイデア自体が素朴で、バックエンド側でなるだけ処理して、インタラクションのある箇所に関してだけ、ハイドレーションするのは理にかなってると感じました。
 
-ただ、islandコンポーネントになると、`<honox-island>`がラップしてDOM構造が変わるので、CSSの親子関係のセレクタを利用するなどDOM構造に依存したコードを書く場合、注意が必要そうです。
-（関連issue: https://github.com/honojs/honox/issues/158 )
+ただ、islandコンポーネントになると、`<honox-island>`がラップしてDOM構造が変わるので、CSSの親子関係のセレクタを利用するなどDOM構造に依存したコードを書く場合、注意が必要そうです。（関連issue: https://github.com/honojs/honox/issues/158 ) とはいえ、私の場合、islandコンポーネントの単位を大きめに取っていて、islandコンポーネント内で物事が解決するため、問題にならなそうと思っています。
 
-とはいえ、私の場合、islandコンポーネントの単位を大きめに取っていて、islandコンポーネント内で物事が解決するため、問題にならなそうと思っています。
-
-余談ですが、SSR用のサーバーが煩わしく感じていたので、Honoで完結できて、楽ちんだなーと思いました。
+繰り返しになりますが、HonoXのアイランドアーキテクチャは、シンプルで理解しやすく、SSRとクライアント側のインタラクションを手軽に両立できる点が魅力だと感じました。
 
 ## まとめ
 
