@@ -286,14 +286,14 @@ https://github.com/kfly8/sample-todoapp-honox-zod-drizzle/blob/06dc286b450ec924d
 
 ### ZodとDrizzle ORMの型の整合が取れなかったら？
 
-Zodで定義したスキーマとDrizzle ORMのスキーマで型が合わなかった時、どうすべきか悩みました。結局、次の整理にしています。
+もし、Zod側のスキーマでoptionalを利用し、Drizzle ORMのスキーマ側でNonNullとした場合、`Type 'boolean | undefined' is not assignable to type 'boolean | SQL<unknown> | Placeholder<string, any>'.` といった型エラーがでました。今となっては、それはそうといった挙動なのですが、最初は戸惑いました。
+
+このようにZodで定義したスキーマとDrizzle ORMのスキーマで型が合わなかった時、どうすべきか悩み、結局、次の整理にしています。
 
 - Zod側/ドメイン側の制約を優先する（これはごく自然）
 - 各スキーマでdefaultやoptionalを利用しない（これが工夫）
     - optionalを利用したい場合は、関数のパラメタをoptionalをいれる（上記の例ならPartialByを利用している）
-    - defaultやoptionalは利便性のために用意されているもの。
-
-もし、Zod側のスキーマでoptionalを利用し、Drizzle ORMのスキーマ側でNonNullとした場合、`Type 'boolean | undefined' is not assignable to type 'boolean | SQL<unknown> | Placeholder<string, any>'.` といった型エラーがでました。今となっては、それはそうといった挙動なのですが、最初は戸惑いました。
+    - defaultやoptionalは利便性のために用意されているものと捉える。
 
 ### アイランドアーキテクチャが素朴で理解しやすい
 
