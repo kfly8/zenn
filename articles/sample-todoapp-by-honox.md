@@ -273,8 +273,8 @@ export class CreateTodoCmd implements Cmd {
 https://github.com/kfly8/sample-todoapp-honox-zod-drizzle/blob/main/app/infra/CreateTodoRepository.ts
 
 総じて、ドメインとインフラの分離ができているので、それぞれ変更しやすいアーキテクチャになっていると感じています。
-このアーキテクチャが単純過ぎて、あくびがでるかはちょっとわからないです。というより、Todoアプリに対して鈍重な作りです。
-ドメインオブジェクトの状態遷移が複雑な要件なときに作り込んでいかないと面白くないですね！
+このアーキテクチャが単純過ぎて、あくびがでるかはちょっとわからないです。というより、Todoアプリを作るには鈍重な作りで、悪い意味であくびが出るかもしれません。
+ドメインオブジェクトの状態遷移が複雑な要件なときに作り込んでいかないと面白くないですね。
 
 ## 感想や試行錯誤中のこと
 
@@ -290,7 +290,7 @@ Zodで定義したスキーマとdrizzleのスキーマで型が合わなかっ�
 
 - Zod側/ドメイン側の制約を優先する（これはごく自然）
 - スキーマでdefaultやoptionalを利用しない（これが工夫）
-    - defaultやoptionalを利用したい場合は、ドメインオブジェクトを作成する関数のパラメタをoptionalをいれる（上記の例ならPartialByを利用している）
+    - optionalを利用したい場合は、関数のパラメタをoptionalをいれる（上記の例ならPartialByを利用している）
     - defaultやoptionalは利便性のために用意されているもの。
 
 もし、Zod側のスキーマでoptionalを利用し、Drizzle ORMのスキーマ側でNonNullとした場合、`Type 'boolean | undefined' is not assignable to type 'boolean | SQL<unknown> | Placeholder<string, any>'.` といった型エラーがでました。今となっては、それはそうといった挙動なのですが、最初は戸惑いました。
@@ -310,7 +310,7 @@ HonoX v0.1.33 時点のアイランドアーキテクチャは、`<honox-island>
 
 [Preact作者のJason Miller氏のこの記事](https://jasonformat.com/islands-architecture/)を読んで、そもそも、アイランドアーキテクチャのアイデア自体が素朴で、バックエンド側でなるだけ処理して、インタラクションのある箇所に関してだけ、ハイドレーションするのは理にかなってると感じました。
 
-ただ、islandコンポーネントになると、`<honox-island>`がラップしてDOM構造が変わるので、CSSの親子関係のセレクタを利用するなどDOM構造に依存したコードを書く場合、注意が必要そうです。（関連issue: https://github.com/honojs/honox/issues/158 ) とはいえ、私の場合、islandコンポーネントの単位を大きめに取っていて、islandコンポーネント内で物事が解決するため、問題にならなそうと思っています。
+ただ、islandコンポーネントになると、`<honox-island>`がラップしてDOM構造が変わるので、CSSの親子関係のセレクタを利用するなどDOM構造に依存したコードを書く場合、注意が必要そうです。（関連issue: https://github.com/honojs/honox/issues/158 ) とはいえ、私の場合、islandコンポーネントの単位を大きめに取っていて、islandコンポーネント内でDOM構造が変わることはないため、問題にならなそうと思っています。
 
 繰り返しになりますが、HonoXのアイランドアーキテクチャは、シンプルで理解しやすく、SSRとクライアント側のインタラクションを手軽に両立できる点が魅力だと感じました。
 
