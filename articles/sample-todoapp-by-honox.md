@@ -3,7 +3,7 @@ title: "HonoXでTodoアプリを作った感想"
 emoji: "☺️"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ['Hono','HonoX','Zod','Drizzle ORM']
-published: false
+published: true
 ---
 
 はじめまして。kobakenです。
@@ -124,7 +124,7 @@ app
 │   ├── CreateTodoRepository.ts ... e.g. Todoの永続化を、CreateTodoCmdのRepository定義に従って行う
 │   ├── UpdateTodoRepository.ts ... e.g. Todoの永続化を、UpdateTodoCmdのRepository定義に従って行う
 │   ├── index.ts
-│   ├── schema.ts ... drizzle-orm用のスキーマ定義
+│   ├── schema.ts ... Drizzle ORM用のスキーマ定義
 │   └── types.ts
 │
 ├── islands ... HonoX標準のアイランドアーキテクチャのコンポーネント配置
@@ -273,8 +273,8 @@ export class CreateTodoCmd implements Cmd {
 https://github.com/kfly8/sample-todoapp-honox-zod-drizzle/blob/main/app/infra/CreateTodoRepository.ts
 
 総じて、ドメインとインフラの分離ができているので、それぞれ変更しやすいアーキテクチャになっていると感じています。
-このアーキテクチャが単純過ぎて、あくびがでるかはちょっとわからないです。というより、Todoアプリを作るには鈍重な作りで、悪い意味であくびが出るかもしれません。
-ドメインオブジェクトの状態遷移が複雑な要件なときに作り込んでいかないと面白くないですね。
+このアーキテクチャが単純過ぎて、あくびがでるかはわからないです。むしろ、Todoアプリを作るだけなら鈍重な作りで、悪い意味であくびが出るかもしれません。
+状態遷移がもっと複雑なビジネス要件のときに作り込んでいかないと面白くないですね。
 
 ## 感想や試行錯誤中のこと
 
@@ -284,18 +284,18 @@ HonoXでルーティングする時、Honoを直で利用するかcreateRouteを
 
 https://github.com/kfly8/sample-todoapp-honox-zod-drizzle/blob/06dc286b450ec924d7afca626a3caaff4f4d15bc/app/routes/api/RPC.ts#L3-L14
 
-### ZodとDrizzle ORMの型の整合性
+### ZodとDrizzle ORMの型の整合が取れなかったら？
 
-Zodで定義したスキーマとdrizzleのスキーマで型が合わなかった時、どうすべきか悩みました。結局、次の整理にしています。
+Zodで定義したスキーマとDrizzle ORMのスキーマで型が合わなかった時、どうすべきか悩みました。結局、次の整理にしています。
 
 - Zod側/ドメイン側の制約を優先する（これはごく自然）
-- スキーマでdefaultやoptionalを利用しない（これが工夫）
+- 各スキーマでdefaultやoptionalを利用しない（これが工夫）
     - optionalを利用したい場合は、関数のパラメタをoptionalをいれる（上記の例ならPartialByを利用している）
     - defaultやoptionalは利便性のために用意されているもの。
 
 もし、Zod側のスキーマでoptionalを利用し、Drizzle ORMのスキーマ側でNonNullとした場合、`Type 'boolean | undefined' is not assignable to type 'boolean | SQL<unknown> | Placeholder<string, any>'.` といった型エラーがでました。今となっては、それはそうといった挙動なのですが、最初は戸惑いました。
 
-### アイランドアーキテクチャが素朴
+### アイランドアーキテクチャが素朴で理解しやすい
 
 HonoX v0.1.33 時点のアイランドアーキテクチャは、`<honox-island>`でラップする作りになっていて、素朴で理解しやすかったです。この実装を初めて読んだ時、シンプル！これでいけるんだ！と興奮しました。（もちろん、これだけで実装で全て完結しているわけではないですが...）
 
