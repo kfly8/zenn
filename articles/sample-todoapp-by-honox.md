@@ -6,7 +6,7 @@ topics: ['hono','honox','zod','drizzle']
 published: false
 ---
 
-はじめまして。[kobaken](https://kobaken.co)です。
+はじめまして。kobakenです。
 
 次の3つの要件を満たす社内向けWebアプリケーションを作るにあたり、[サンプルのTODOアプリケーションを作成した](https://github.com/kfly8/sample-todoapp-honox-zod-drizzle)ので、その感想を書きます。
 
