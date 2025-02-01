@@ -16,8 +16,7 @@ published: false
 
 ざっくりな要件ですね☺️
 
-筆者自身は、ISUCON10,11,12,13,14でPerlへの移植作業に関わったり、[YAPC::Hiroshima 2024](https://yapcjapan.org/2024hiroshima/) の運営だったりと、Perlで生活しています。
-今回採用したバックエンドTypeScriptの経験は無いです。用語を間違って使っていたりしたら、椅子を投げてもらえるとありがたいです。
+筆者自身は、ISUCON10,11,12,13,14でPerlへの移植作業に関わったり、[YAPC::Hiroshima 2024](https://yapcjapan.org/2024hiroshima/) の運営だったりと、Perlで生活しています。今回採用したバックエンドTypeScriptの経験は無いです。用語を間違って使っていたりしたら、椅子を投げてもらえるとありがたいです。
 
 ## 採用した技術スタックとその採用理由
 
@@ -42,22 +41,25 @@ published: false
 
 Webアプリケーションのビューは、TSX以外で書きたくないと思えるくらい他の言語と体験に違いがあると思っています。加えて、今回の要件的に、スケールのことは考えなくて良く、また言語切り替えの認知負荷を下げたいので、フロントエンド、バックエンド両方ともTypeScriptで書いてみようと思いました。
 
-一休さん、Toggleさん、ピクスタさんの採用事例に影響を受けています！
-- https://speakerdeck.com/naoya/typescript-guan-shu-xing-sutairudebatukuendokai-fa-noriaru
-- https://speakerdeck.com/susan1129/honoxdedong-kasuapurikesiyonnoriaru
-- https://speakerdeck.com/yasaichi/architecture-decision-for-the-next-10-years-at-pixta
+一休さん、トグルホールディングスさん、ピクスタさんの採用事例に影響を受けています。
+
+<script defer class="speakerdeck-embed" data-id="cb2e31ccf3c44779893bfd4eb0f86dca" data-ratio="1.7777777777777777" src="//speakerdeck.com/assets/embed.js"></script>
+
+<script defer class="speakerdeck-embed" data-id="df251937942c48d3a773d93b6ccd4bcc" data-ratio="1.7772511848341233" src="//speakerdeck.com/assets/embed.js"></script>
+
+<script defer class="speakerdeck-embed" data-id="c8556affd0f3401388af6d664d320c42" data-ratio="1.7777777777777777" src="//speakerdeck.com/assets/embed.js"></script>
 
 また、TypeScriptの処理はBunに任せました。Bunには何でも入っていて、一人開発の負担を減らせそうです。例えば、テスティングフレームワークがバンドルされていて、超高速に動作するようです。[最近、1.2が出ていました](https://bun.sh/blog/bun-v1.2)が、異常な気合いで何でも入ってる感じがします。
 
 ### Hono と HonoX を選んだ理由
 
-Honoを選んだ理由ですが、合理的な理由もありますが「Hono 面白そう！」という気持ちが隠せないです。
+Honoを選んだ理由ですが、合理的な理由もありますが「Hono 面白そう！」という気持ちで選んでることは隠せないです。
 
 調べてみると、yusukebeさんがHonoの最初のコミットをして2.5ヶ月後に、YAPCのトークがあったようです。それから2年も経ってます。
 https://x.com/yusukebe/status/1499989656124858373 
 
-[HonoをPerlに移植するPono](https://github.com/kfly8/pono)を細々と書いていて、なぜかHonoのソースコードはよく読んでいます。
-それもあって、Honoはソースコード込みで、コアがシンプルだと感じています。(Honoの型関連のコードは、実処理より三段階くらい難しく感じていて、こちらは勘で読んでます☺️)
+[HonoをPerlに移植するPono](https://github.com/kfly8/pono)を細々と書いていて、なぜかHonoのソースコードはよく読んでいます。それもあって、Honoはソースコード込みで、コアがシンプルだと感じています。(Honoの型関連のコードは、実処理より三段階くらい難しく感じていて、こちらは勘で読んでます☺️)
+
 加えて、Web標準にも沿っているので、運用はどうにでもなりそうな感じがして好みです。
 
 HonoXは、Vite周りの設定を省略して開発を始められそうなことと、ファイルベースルーティングで単調なつくりにしやすそうなので選びました。
@@ -73,7 +75,7 @@ HonoXは、Vite周りの設定を省略して開発を始められそうなこ�
     - 普段、Perlの型制約ライブラリのType::Tinyを使い倒しているのですが、それと似た感覚で使ってます。[ZodをPerlに移植するPoz](https://metacpan.org/pod/Poz)を読んでいた影響もあります。
     - 後述しますが、ドメインモデリングもZodに大半を任せる設計にしました。
 - neverthrow
-    - TypeScriptにresult型を提供するモジュールです。想定内のエラーは型情報に現れた方がハンドリング漏れしないので利用してます。
+    - TypeScriptにResult型を提供するモジュールです。想定内のエラーは型情報に現れた方がハンドリング漏れしないので利用してます。
 - tailwindcss v4
     - [ここ数年のYAPCのLPが、tailwindcssで作られていて](https://yapcjapan.org)、馴染みがあるくらいの理由です。最近出たv4にしても、すんなり動いてます。
 
@@ -82,9 +84,9 @@ HonoXは、Vite周りの設定を省略して開発を始められそうなこ�
 採用しなかった技術スタックについても少し触れておきます。
 
 - React
-    - Reactを積極的に利用しない理由はなく、hono/jsxでどこまでできるのか試してみたかったので今は利用していないだけです。
-    - 表現したいUIやライブラリの状況次第では、Reactでレンダリングするように変更すると思います。
-    - ただ、依存しないで済むならその方が良いと思っています。
+    - hono/jsxでどこまでできるのか試してみたかったので、たまたま利用していないだけです。
+    - 表現したいUIやライブラリの状況次第では、Reactに変更すると思います。
+    - ただ、依存は少ない方が管理が楽になるので、依存しないで済む世界観になったら良いと思っています。
 - Bun sql
     - 慣れたSELECT文で書けることは魅力ですが、型によるサポートが弱い印象があり、今回見送っています。
     - 薄く作るならこれで十分だろうと感じています。
@@ -155,6 +157,7 @@ islandsに配置するコンポーネントの粒度や構成の自由度は高�
 ```
 
 こういった判断をした理由は、大きく2つあります。
+
 1. Todoアプリにしても社内向けのツールにしても、インタラクションが全くないコンポーネントの抽出は難しいと感じた
     - → コンポーネントは基本、islandsに配置すると割り切っても良いのではないか？
 2. コンポーネントは運用開発しながら諸々変更しやすい方が良い
@@ -166,7 +169,8 @@ islandsに配置するコンポーネントの粒度や構成の自由度は高�
 
 ### domainとcmdとinfra について
 
-関数型ドメインモデリングに影響を受けた作りになっています。
+ロジックの実装は、関数型ドメインモデリングに影響を受けた作りになっています。
+
 ドメインモデルは次のようにZodで定義しています。
 
 ```typescript
@@ -211,18 +215,17 @@ export function createTodo(params: CreateTodoParams) {
 }
 ```
 
-細かい工夫ですが、データを一意に識別するidはbrand型で定義して、idの取り違えといったバグの予防をしています。
+細かい工夫ですが、データを一意に識別するidはBrand型で定義して、idの取り違えといったバグの予防をしています。
 
 ```typescript
 const todoIdSchema = z.string().brand<"TodoId">();
 ```
 
-Todo自身はbrand型にしていません。idがbrandingされていれば識別で間違える可能性は低いと考えて、取り回し易さを優先しています。
+蛇足ですが、Todo自身はBrand型にしていません。idがbrandingされていれば識別で間違える可能性は低いと考えて、取り回し易さを優先しています。
 
 ZodとTypeScriptを利用すると、簡便にデータの詳細を記述できてよかったです。このデータを、コマンドパターンとリポジトリパターンでSQLiteに永続化しています。
 
-コマンドパターンは、アプリケーションの操作をオブジェクト化するパターンです。お気に入りのポイントは一貫性です。
-今回、操作実行する場合、executeメソッドで呼びだす制約を持たせたので、アプリケーションのどの操作も一貫した使い方ができます。
+コマンドパターンは、アプリケーションの操作をオブジェクト化するパターンです。お気に入りのポイントは一貫性で、アプリケーションのどの操作もexecuteで呼び出せるのが単純で良いと感じています。
 
 リポジトリパターンは、インフラ処理を抽象化して、ドメインモデルを永続化するために利用しています。次のコードであれば、Todoドメインモデルを永続化するRepositoryインターフェースをコマンドで定義して、これをインフラ層で実装しています。
 
@@ -243,7 +246,7 @@ export interface Repository {
 }
 
 export class CreateTodoCmd implements Cmd {
-    // リポジトリを注入
+	// リポジトリを注入
 	constructor(private repo: Repository) {
 		this.repo = repo;
 	}
@@ -265,11 +268,16 @@ export class CreateTodoCmd implements Cmd {
 }
 ```
 
+
+このCreateTodoCmdのリポジトリのインフラの実装は、ここに置いてます。
+https://github.com/kfly8/sample-todoapp-honox-zod-drizzle/blob/main/app/infra/CreateTodoRepository.ts
+
+
 ## 感想や試行錯誤中のこと
 
 ### HonoXのcreateRouteの利用とRPC
 
-HonoXでルーティングする時、Honoを直で利用するかcreateRouteを利用するか迷いました。自由度が高い手段は乱発すると混乱するので、createRouteに寄せようにしました。こうしたときに、RPC用の型の抽出はどうすれば良いか悩みました。結局、DRYではないですが、RPCしたいエンドポイントを手動で集約しました。server.ts で定義しているAppをうまいこと参照すれば、DRYにできそうな気はするのですが、やれていないです。そもそも、ルーティングをHonoの直利用にすれば、この悩みはなくなりますが、それはそれで自由度が高すぎるような気がして、悩ましいと思っています。
+HonoXでルーティングする時、Honoを直で利用するかcreateRouteを利用するか迷いました。自由度の低い手段の方が読む時に考えることが減るので、createRouteに寄せようにしました。こうしたときに、RPC用の型の抽出はどうすれば良いか悩みました。結局、DRYではないですが、RPCしたいエンドポイントを手動で集約しました。server.ts で定義しているAppをうまいこと参照すれば、DRYにできそうな気はするのですが、やれていないです。そもそも、ルーティングをHonoの直利用にすれば、この悩みはなくなりますが、それはそれで自由度が高すぎるような気がして、悩ましいと思っています。
 
 https://github.com/kfly8/sample-todoapp-honox-zod-drizzle/blob/06dc286b450ec924d7afca626a3caaff4f4d15bc/app/routes/api/RPC.ts#L3-L14
 
