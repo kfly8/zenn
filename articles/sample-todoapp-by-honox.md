@@ -1,6 +1,6 @@
 ---
 title: "HonoXでTodoアプリを作った感想"
-emoji: "😊"
+emoji: "☺️"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ['hono','honox','zod','drizzle']
 published: false
