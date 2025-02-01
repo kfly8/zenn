@@ -2,7 +2,7 @@
 title: "HonoXでTodoアプリを作った感想"
 emoji: "☺️"
 type: "tech" # tech: 技術記事 / idea: アイデア
-topics: ['hono','honox','zod','drizzle']
+topics: ['Hono','HonoX','Zod','Drizzle ORM']
 published: false
 ---
 
@@ -27,10 +27,10 @@ published: false
     - [Bun v1.2](https://bun.sh/)
 - Web Application Framework
     - [Hono](https://hono.dev/)
-    - [honox](https://github.com/honojs/honox)
+    - [HonoX](https://github.com/honojs/honox)
 - Database / ORM
     - [SQLite](https://www.sqlite.org/)
-    - [drizzle](https://orm.drizzle.team/)
+    - [Drizzle ORM](https://orm.drizzle.team/)
 - Validation, Domain Modeling
     - [Zod](https://zod.dev/)
 - misc
@@ -284,7 +284,7 @@ HonoXでルーティングする時、Honoを直で利用するかcreateRouteを
 
 https://github.com/kfly8/sample-todoapp-honox-zod-drizzle/blob/06dc286b450ec924d7afca626a3caaff4f4d15bc/app/routes/api/RPC.ts#L3-L14
 
-### ZodとDrizzleの型の整合性
+### ZodとDrizzle ORMの型の整合性
 
 Zodで定義したスキーマとdrizzleのスキーマで型が合わなかった時、どうすべきか悩みました。結局、次の整理にしています。
 
@@ -293,7 +293,7 @@ Zodで定義したスキーマとdrizzleのスキーマで型が合わなかっ�
     - defaultやoptionalを利用したい場合は、ドメインモデルを作成する関数のパラメタをoptionalをいれる（上記の例ならPartialByを利用している）
     - defaultやoptionalは利便性のために用意されているもの。
 
-もし、Zod側のスキーマでoptionalを利用し、Drizzleのスキーマ側でNonNullとした場合、`Type 'boolean | undefined' is not assignable to type 'boolean | SQL<unknown> | Placeholder<string, any>'.` といった型エラーがでました。今となっては、それはそうといった挙動なのですが、最初は戸惑いました。
+もし、Zod側のスキーマでoptionalを利用し、Drizzle ORMのスキーマ側でNonNullとした場合、`Type 'boolean | undefined' is not assignable to type 'boolean | SQL<unknown> | Placeholder<string, any>'.` といった型エラーがでました。今となっては、それはそうといった挙動なのですが、最初は戸惑いました。
 
 ### アイランドアーキテクチャが素朴
 
@@ -316,7 +316,7 @@ HonoX v0.1.33 時点のアイランドアーキテクチャは、`<honox-island>
 
 ## まとめ
 
-HonoXやZod、Drizzleを利用して、サンプルのTODOアプリケーションを作成しました。
+HonoXやZod、Drizzle ORMを利用して、サンプルのTODOアプリケーションを作成しました。
 
 https://github.com/kfly8/sample-todoapp-honox-zod-drizzle
 
