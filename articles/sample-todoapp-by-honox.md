@@ -6,6 +6,8 @@ topics: ['hono','honox','zod','drizzle']
 published: false
 ---
 
+はじめまして。[kobaken](https://kobaken.co)です。
+
 次の3つの要件を満たす社内向けWebアプリケーションを作るにあたり、[サンプルのTODOアプリケーションを作成した](https://github.com/kfly8/sample-todoapp-honox-zod-drizzle)ので、その感想を書きます。
 
 - 要件1. セルフホストが簡単。特にデータは、自身で管理、所持できる
@@ -14,8 +16,8 @@ published: false
 
 ざっくりな要件ですね☺️
 
-筆者自身は、ISUCON10,11,12,13でPerlへの移植作業をしたり、[YAPC::Hiroshima 2024](https://yapcjapan.org/2024hiroshima/) の運営だったりと、Perlで生活しています。
-今回採用したTypeScript関連のバックエンドの経験は無いです。用語を間違って使っていたりしたら、椅子を投げてもらえるとありがたいです。
+筆者自身は、ISUCON10,11,12,13,14でPerlへの移植作業に関わったり、[YAPC::Hiroshima 2024](https://yapcjapan.org/2024hiroshima/) の運営だったりと、Perlで生活しています。
+今回採用したバックエンドTypeScriptの経験は無いです。用語を間違って使っていたりしたら、椅子を投げてもらえるとありがたいです。
 
 ## 採用した技術スタックとその採用理由
 
@@ -38,8 +40,7 @@ published: false
 
 ### TypeScript と Bun を選んだ理由
 
-Webアプリケーションのビューは、TSX以外で書きたくないと思えるくらい他の言語と体験に違いがあると思っています。
-加えて、今回の要件的に、スケールのことは考えなくて良く、また言語切り替えの認知負荷を下げたいので、フロントエンド、バックエンド両方ともTypeScriptで書いてみようと思いました。
+Webアプリケーションのビューは、TSX以外で書きたくないと思えるくらい他の言語と体験に違いがあると思っています。加えて、今回の要件的に、スケールのことは考えなくて良く、また言語切り替えの認知負荷を下げたいので、フロントエンド、バックエンド両方ともTypeScriptで書いてみようと思いました。
 
 一休さん、Toggleさん、ピクスタさんの採用事例に影響を受けています！
 - https://speakerdeck.com/naoya/typescript-guan-shu-xing-sutairudebatukuendokai-fa-noriaru
@@ -50,13 +51,13 @@ Webアプリケーションのビューは、TSX以外で書きたくないと�
 
 ### Hono と HonoX を選んだ理由
 
-Honoを選んだ理由ですが、合理的な理由もありますが、Hono 面白そう！という気持ちが隠せないです。
+Honoを選んだ理由ですが、合理的な理由もありますが「Hono 面白そう！」という気持ちが隠せないです。
 
 調べてみると、yusukebeさんがHonoの最初のコミットをして2.5ヶ月後に、YAPCのトークがあったようです。それから2年も経ってます。
 https://x.com/yusukebe/status/1499989656124858373 
 
 [HonoをPerlに移植するPono](https://github.com/kfly8/pono)を細々と書いていて、なぜかHonoのソースコードはよく読んでいます。
-Honoはソースコード込みで、コアがシンプルだと感じていました。(Honoの型関連のコードは、実処理より三段階くらい難しく感じていて、こちらは勘で読んでます。)
+それもあって、Honoはソースコード込みで、コアがシンプルだと感じています。(Honoの型関連のコードは、実処理より三段階くらい難しく感じていて、こちらは勘で読んでます☺️)
 加えて、Web標準にも沿っているので、運用はどうにでもなりそうな感じがして好みです。
 
 HonoXは、Vite周りの設定を省略して開発を始められそうなことと、ファイルベースルーティングで単調なつくりにしやすそうなので選びました。
@@ -82,13 +83,11 @@ HonoXは、Vite周りの設定を省略して開発を始められそうなこ�
 
 - React
     - Reactを積極的に利用しない理由はなく、hono/jsxでどこまでできるのか試してみたかったので今は利用していないだけです。
-    - 表現したいUIやライブラリの対応状況次第では、Reactでレンダリングするように変更すると思います。
+    - 表現したいUIやライブラリの状況次第では、Reactでレンダリングするように変更すると思います。
     - ただ、依存しないで済むならその方が良いと思っています。
-- Next.js
-    - HonoXを利用すれば、Viteとの統合、ファイルベースルーティング、アイランドアーキテクチャはあるので、現時点でNext.jsを採用する理由が浮かんでいないです。
 - Bun sql
     - 慣れたSELECT文で書けることは魅力ですが、型によるサポートが弱い印象があり、今回見送っています。
-    - ただ薄く作るならこれで十分だろうと感じています。
+    - 薄く作るならこれで十分だろうと感じています。
 
 ----
 
@@ -116,8 +115,7 @@ app
 │   └── UpdateTodoCmd.ts ... e.g. Todo更新のコマンド、永続化を行うRepositoryの定義も含む
 │
 ├── domain ... ドメインモデル、および、サービスの実装
-│   ├── todo.ts ... e.g. Todoのドメインモデル / Zodで表現している
-│   └── todoService.ts ... e.g. Todoのサービス / 純粋関数
+│   └── todo.ts ... e.g. Todoのドメインモデル
 │
 ├── infra ... インフラとのやりとり
 │   ├── CreateTodoRepository.ts ... e.g. Todoの永続化を、CreateTodoCmdのRepository定義に従って行う
@@ -161,34 +159,39 @@ islandsに配置するコンポーネントの粒度や構成の自由度は高�
     - → コンポーネントは基本、islandsに配置すると割り切っても良いのではないか？
 2. コンポーネントは運用開発しながら諸々変更しやすい方が良い
     - → `XXXIsland`といったroutesから呼び出される入口のコンポーネントを用意。その中身のコンポーネントは、`XXXIsland`外では利用させない。
-    - 結果、`XXXIsland`配下の変更の自由度が高い
+    - 結果、`XXXIsland`配下の変更の自由度が高くする。
 
 1つ目の判断に関しては少し心配事があります。クライアント側で読み込むハイドレーション用のJavaScriptが増え問題になるのではないか？と心配しています。
-SPAを扱っていたときは、随分沢山クライアントにJavaScriptを読み込ませていたので、杞憂な気もします。
-今回は試しに、vite buildして得られたハイドレーション用のJavaScriptを304 Not Modifiedで返すように調整しました。
-これだけのために、前段のサーバーを起きたくなかったのでHonoで完結させています。具体的には、hono/vite-build/bun でEtagを指定する方法がわからなかったので、代わりにhono/vite-build を利用して、自前で静的ファイルのルーティングを行っています。
-
-まだ調整の余地がありそうです。
+とはいえ、SPAを扱っていたときは、随分沢山クライアントにJavaScriptを読み込ませていたことを思えば、気にしすぎな気もします。今回は試しに、vite buildして得られたハイドレーション用のJavaScriptを304 Not Modifiedで返すように調整しました。これだけのために、前段のサーバーを起きたくなかったのでHonoで完結させています。具体的には、hono/vite-build/bun でEtagを指定する方法がわからなかったので、代わりにhono/vite-build を利用して、自前で静的ファイルのルーティングを行っています。viteの開発サーバーでは、何もせずともハイドレーション用のJavaScriptは304を返していたので、調整の余地がありそうです。
 
 ### domainとcmdとinfra について
 
 関数型ドメインモデリングに影響を受けた作りになっています。
-ドメインモデルは次のようにZodで定義して、振る舞いはResult型を返す純粋関数として実装しています。
+ドメインモデルは次のようにZodで定義しています。
 
 ```typescript
+// Todoのドメインモデル
 export const todoSchema = z.object({
 	id: todoIdSchema,
 	title: z.string().min(1).max(100),
-	description: z.string().max(1000).optional(),
-	completed: z.boolean().optional(),
+	description: z.string().max(1000),
+	completed: z.boolean(),
 	authorId: userIdSchema,
-	assigneeIds: z.array(userIdSchema).optional(),
+	assigneeIds: z.array(userIdSchema),
 });
 
 export type Todo = z.infer<typeof todoSchema>;
+```
 
-export type CreateTodoParams = Omit<Todo, "id">;
+振る舞いはResult型を返す純粋関数として実装しています。
 
+```typescript
+export type CreateTodoParams = PartialBy<
+	Omit<Todo, "id">,
+	"description" | "completed" | "assigneeIds"
+>;
+
+// Todoドメインモデルを作成する関数
 export function createTodo(params: CreateTodoParams) {
 	const todo = {
 		...params,
@@ -208,49 +211,84 @@ export function createTodo(params: CreateTodoParams) {
 }
 ```
 
-細かいですが、データを一意に識別するidはbrand型で定義して、idの取り違えといったバグの予防をしています。Todo自身はbrand型にしていません。idがbrandingされていれば識別で間違える可能性は低いと考えて、取り回しのし易さを優先しています。
+細かい工夫ですが、データを一意に識別するidはbrand型で定義して、idの取り違えといったバグの予防をしています。
 
 ```typescript
 const todoIdSchema = z.string().brand<"TodoId">();
 ```
 
-ZodとTypeScriptであれば、簡便にデータの詳細を記述できるのでよかったです。
-このデータを、コマンドパターンとリポジトリパターンでSQLiteに永続化しています。
+Todo自身はbrand型にしていません。idがbrandingされていれば識別で間違える可能性は低いと考えて、取り回し易さを優先しています。
 
-コマンドパターンは、アプリケーションの操作をオブジェクト化して、executeメソッドで呼びだすように実装しています。
-こういったコンベンションのおかげで、アプリケーションの操作を一貫したやり方で行えて、実用的だと思います。
+ZodとTypeScriptを利用すると、簡便にデータの詳細を記述できてよかったです。このデータを、コマンドパターンとリポジトリパターンでSQLiteに永続化しています。
 
+コマンドパターンは、アプリケーションの操作をオブジェクト化するパターンです。お気に入りのポイントは一貫性です。
+今回、操作実行する場合、executeメソッドで呼びだす制約を持たせたので、アプリケーションのどの操作も一貫した使い方ができます。
 
-Zodで定義したスキーマとdrizzleのスキーマで型が合わない場面は、Zod側/ドメイン側を優先して変換しました。例えば、次のコードは、completedがundefinedの場合、falseに変換をしています。
-こういった変換は本質的でないので、どうにかしたいです。(ORMのスキーマが、Zodで定義されていたとしたら、良い？)
+リポジトリパターンは、インフラ処理を抽象化して、ドメインモデルを永続化するために利用しています。次のコードであれば、Todoドメインモデルを永続化するRepositoryインターフェースをコマンドで定義して、これをインフラ層で実装しています。
 
 ```typescript
-async function saveTodo(
-	tx: TX,
-	data: Pick<Todo, "id" | "completed" | "title" | "description" | "authorId">,
-) {
-	const { completed, ...rest } = data;
-	// transform undefined to false
-	await tx.insert(todos).values({ ...rest, completed: !!completed });
+// コマンドの実装
+import { err, ok } from "neverthrow";
+import type { Result } from "neverthrow";
+import type { CreateTodoParams, Todo } from "../domain/todo";
+import { createTodo } from "../domain/todo";
+import type { Cmd } from "./types";
+
+export type RepositoryParams = {
+	todo: Todo;
+};
+
+export interface Repository {
+	save(params: RepositoryParams): Promise<Result<null, Error>>;
+}
+
+export class CreateTodoCmd implements Cmd {
+    // リポジトリを注入
+	constructor(private repo: Repository) {
+		this.repo = repo;
+	}
+
+	async execute(params: CreateTodoParams) {
+		const result = createTodo(params);
+		if (result.isErr()) {
+			return err(new Error("Failed to create todo", { cause: result.error }));
+		}
+		const todo = result.value;
+
+		const saved = await this.repo.save({ todo });
+		if (saved.isErr()) {
+			return err(new Error("Failed to save todo", { cause: saved.error }));
+		}
+
+		return ok(todo);
+	}
 }
 ```
 
-## 試行錯誤中のこと
+## 感想や試行錯誤中のこと
 
 ### HonoXのcreateRouteの利用とRPC
 
-HonoXでルーティングする時、Honoを直で利用するかcreateRouteを利用するか迷った。自由度は低い方が可読性は高いと思い、結局、createRouteに寄せた。けれど、HonoXでAPIのRPCをしたい時、createRouteに寄せると、RPC用の型をどう作れば良いか悩んだ。結局、DRYではないけれど、RPCしたいエンドポイントを手動で集約した。
+HonoXでルーティングする時、Honoを直で利用するかcreateRouteを利用するか迷いました。自由度が高い手段は乱発すると混乱するので、createRouteに寄せようにしました。こうしたときに、RPC用の型の抽出はどうすれば良いか悩みました。結局、DRYではないですが、RPCしたいエンドポイントを手動で集約しました。server.ts で定義しているAppをうまいこと参照すれば、DRYにできそうな気はするのですが、やれていないです。そもそも、ルーティングをHonoの直利用にすれば、この悩みはなくなりますが、それはそれで自由度が高すぎるような気がして、悩ましいと思っています。
 
 https://github.com/kfly8/sample-todoapp-honox-zod-drizzle/blob/06dc286b450ec924d7afca626a3caaff4f4d15bc/app/routes/api/RPC.ts#L3-L14
 
-server.ts で定義しているAppをうまいこと参照すれば、DRYにできそうな気はするけれど、やれていない。
-ルーティングに直でHonoを利用すれば、この悩みはなくなるが、悩ましい。
+### ZodとDrizzleの型の整合性
+
+Zodで定義したスキーマとdrizzleのスキーマで型が合わなかった時、どうすべきか悩みました。結局、次の整理にしています。
+
+- Zod側/ドメイン側の制約を優先する（これはごく自然）
+- スキーマでdefaultやoptionalを利用しない（これが工夫）
+    - defaultやoptionalを利用したい場合は、ドメインモデルを作成する関数のパラメタをoptionalをいれる（上記の例ならPartialByを利用している）
+    - defaultやoptionalは利便性のために用意されているもの。
+
+もし、Zod側のスキーマでoptionalを利用し、Drizzleのスキーマ側でNonNullとした場合、`Type 'boolean | undefined' is not assignable to type 'boolean | SQL<unknown> | Placeholder<string, any>'.` といった型エラーがでました。今となっては、それはそうといった挙動なのですが、最初は戸惑いました。
 
 ### アイランドアーキテクチャが素朴
 
-HonoX v0.1.33 時点のアイランドアーキテクチャは、自分で用意したHTMLを`<honox-island>`でラップする作りになっていて、とても素朴で理解しやすかったです。バックエンドでなるだけ処理して、HTMLを返す時にインタラクションするための情報を埋め込むアイランドアーキテクチャのアイデア通りの実装で、挙動にびっくりすることがなさそうです。
+HonoX v0.1.33 時点のアイランドアーキテクチャは、`<honox-island>`でラップする作りになっていて、素朴で理解しやすかったです。この実装を初めて読んだ時、シンプル！これでいけるんだ！と関心しました。（もちろん、これだけで実装で全て完結しているわけではないですが...）
 
-```jsx
+```html
 <honox-island component-name="/app/islands/TodoIsland/index.tsx" data-serialized-props="[シリアライズされたデータ]" data-hono-hydrated="true">
    <ul>
        <li>タスク1</li>
@@ -259,18 +297,18 @@ HonoX v0.1.33 時点のアイランドアーキテクチャは、自分で用意
 </honox-island>
 ``` 
 
-ンポーネントをislandにするかどうかで`<honox-island>`でラップするかどうかの違いがありDOM構造が変わるので、そこは注意が必要そうに見えています。こちらに関連するissueはあり、見守りたいと思います。
-https://github.com/honojs/honox/issues/158
+[Preact作者のJason Miller氏のこの記事](https://jasonformat.com/islands-architecture/)を読んで、そもそも、アイランドアーキテクチャのアイデア自体が素朴で、バックエンド側でなるだけ処理して、インタラクションのある箇所に関してだけ、ハイドレーションするのは理にかなってると感じました。
 
-基本islandにいれるようにすれば、あまり問題にならない気もしているので、もう少し使い込んでみたいです。
+ただ、islandコンポーネントになると、`<honox-island>`がラップしてDOM構造が変わるので、CSSの親子関係のセレクタを利用するなどDOM構造に依存したコードを書く場合、注意が必要そうです。
+（関連issue: https://github.com/honojs/honox/issues/158 )
+
+とはいえ、私の場合、islandコンポーネントの単位を大きめに取っていて、islandコンポーネント内で物事が解決するため、問題にならなそうと思っています。
+
+余談ですが、SSR用のサーバーが煩わしく感じていたので、Honoで完結できて、楽ちんだなーと思いました。
 
 ## まとめ
 
-WIP:
+HonoXやZod、Drizzleを利用して、サンプルのTODOアプリケーションを作成しました。
 
-## 参考文献
-
-- アイランドアーキテクチャ
-    - [https://jasonformat.com/islands-architecture/](https://jasonformat.com/islands-architecture/) 
-
+https://github.com/kfly8/sample-todoapp-honox-zod-drizzle
 
