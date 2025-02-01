@@ -117,8 +117,8 @@ app
 │   ├── CreateTodoCmd.ts ... e.g. Todo作成のコマンド、永続化を行うRepositoryの定義も含む
 │   └── UpdateTodoCmd.ts ... e.g. Todo更新のコマンド、永続化を行うRepositoryの定義も含む
 │
-├── domain ... ドメインモデル、および、サービスの実装
-│   └── todo.ts ... e.g. Todoのドメインモデル
+├── domain ... ドメインオブジェクト、および、サービスの実装
+│   └── todo.ts ... e.g. Todoのドメインオブジェクト
 │
 ├── infra ... インフラとのやりとり
 │   ├── CreateTodoRepository.ts ... e.g. Todoの永続化を、CreateTodoCmdのRepository定義に従って行う
@@ -172,10 +172,10 @@ islandsに配置するコンポーネントの粒度や構成の自由度は高�
 
 ロジックの実装は、関数型ドメインモデリングに影響を受けた作りになっています。
 
-ドメインモデルは次のようにZodで定義しています。
+ドメインオブジェクトは次のようにZodで定義しています。文字列長など型制約だと表現が難しいことも、Zodに任せています。
 
 ```typescript
-// Todoのドメインモデル
+// Todoのドメインオブジェクト
 export const todoSchema = z.object({
 	id: todoIdSchema,
 	title: z.string().min(1).max(100),
@@ -196,7 +196,7 @@ export type CreateTodoParams = PartialBy<
 	"description" | "completed" | "assigneeIds"
 >;
 
-// Todoドメインモデルを作成する関数
+// Todoドメインオブジェクトを作成する関数
 export function createTodo(params: CreateTodoParams) {
 	const todo = {
 		...params,
@@ -228,7 +228,7 @@ ZodとTypeScriptを利用すると、簡便にデータの詳細を記述でき�
 
 コマンドパターンは、アプリケーションの操作をオブジェクト化するパターンです。お気に入りのポイントは一貫性で、アプリケーションのどの操作もexecuteで呼び出せるのが単純で良いと感じています。
 
-リポジトリパターンは、インフラ処理を抽象化して、ドメインモデルを永続化するために利用しています。次のコードであれば、Todoドメインモデルを永続化するRepositoryインターフェースをコマンドで定義して、これをインフラ層で実装しています。
+リポジトリパターンは、インフラ処理を抽象化して、ドメインオブジェクトを永続化するために利用しています。次のコードであれば、Todoドメインオブジェクトを永続化するRepositoryインターフェースをコマンドで定義して、これをインフラ層で実装しています。
 
 ```typescript
 // コマンドの実装
@@ -272,9 +272,9 @@ export class CreateTodoCmd implements Cmd {
 このCreateTodoCmdのリポジトリのインフラの実装は、ここに置いてます。
 https://github.com/kfly8/sample-todoapp-honox-zod-drizzle/blob/main/app/infra/CreateTodoRepository.ts
 
-
 総じて、ドメインとインフラの分離ができているので、それぞれ変更しやすいアーキテクチャになっていると感じています。
-このアーキテクチャが単純過ぎて、あくびがでるかはちょっとわからないです。
+このアーキテクチャが単純過ぎて、あくびがでるかはちょっとわからないです。というより、Todoアプリに対して鈍重な作りです。
+ドメインオブジェクトの状態遷移が複雑な要件なときに作り込んでいかないと面白くないですね！
 
 ## 感想や試行錯誤中のこと
 
@@ -290,7 +290,7 @@ Zodで定義したスキーマとdrizzleのスキーマで型が合わなかっ�
 
 - Zod側/ドメイン側の制約を優先する（これはごく自然）
 - スキーマでdefaultやoptionalを利用しない（これが工夫）
-    - defaultやoptionalを利用したい場合は、ドメインモデルを作成する関数のパラメタをoptionalをいれる（上記の例ならPartialByを利用している）
+    - defaultやoptionalを利用したい場合は、ドメインオブジェクトを作成する関数のパラメタをoptionalをいれる（上記の例ならPartialByを利用している）
     - defaultやoptionalは利便性のために用意されているもの。
 
 もし、Zod側のスキーマでoptionalを利用し、Drizzle ORMのスキーマ側でNonNullとした場合、`Type 'boolean | undefined' is not assignable to type 'boolean | SQL<unknown> | Placeholder<string, any>'.` といった型エラーがでました。今となっては、それはそうといった挙動なのですが、最初は戸惑いました。
