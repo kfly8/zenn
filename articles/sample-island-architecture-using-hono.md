@@ -125,6 +125,8 @@ observer.observe(island);
 
 最後に、ハイドレーション処理がメインスレッドを占有することによって、ユーザー操作が妨げられる問題を解消しました。具体的には、ブラウザがアイドル状態のときにのみ処理を進める[requestIdleCallback](https://developer.mozilla.org/en-US/docs/Web/API/Window/requestIdleCallback) APIを活用してみました。
 
+【追記】[requestIdleCallbackは現時点ではSafariが利用できない](https://caniuse.com/?search=requestidlecallback)ので、polyfill実装が必要です。この辺を参考にして自分は用意しています。 https://developer.chrome.com/blog/using-requestidlecallback
+
 ```typescript
   const processBatchWithIdleCallback = (islands: Element[], priority: 'high' | 'low') => {
     let index = 0;
