@@ -22,9 +22,9 @@ published: false
 1. **ファイル分割ルーティング定義を簡潔にしたい**
   - `app.get('/', ...)`といったHonoの最も簡素な書き方にしたい。hono/factory, HonoXは利用しない。
   - RPC用の型を取り出しやすくしたい
-2. **エッジ環境での起動を速くするため、サーバーエンドポイントの分割したい**
+2. **エッジ環境での起動を速くするため、サーバーエンドポイントの分割しやすくしたい**
   - app-server.ts, api-server.ts, admin-server.ts など。
-  - やるかどうかは別として、feature1-server.ts, feature2-server.ts といった機能単位の分割であろうと容易にしたい
+  - (実際切り替えるとなると難しいところもあると思いますが) heavy-server.tsをlight1-server.ts,light2-server.tsといった分割を運の途中からでも容易にしたい
 
 この要件を達するのに、複数のルーティング定義を材料にして Hono インスタンスをつくるBuilderがあれば良かろうと思って、hono-builderを作り始めました。
 結局、このBuilderパターンのアプローチは、**Honoだけで実現できた**ので、拙作のhono-builderはdeprecateしました。
