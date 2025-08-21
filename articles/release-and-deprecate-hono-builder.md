@@ -8,14 +8,14 @@ published: false
 
 こんにちは。kobakenです。
 
-先日、[hono-builder](https://www.npmjs.com/package/hono-builder)というnpmモジュールをリリースしました。HonoでBuilderパターンを簡単に実現するためのモジュールで、ルーティング定義のファイル分割やマルチエンドポイントをやりやすくしてくれるものでした。
+先日、[hono-builder](https://www.npmjs.com/package/hono-builder)というnpmモジュールをリリースしました。
 
-ですが、今日、deprecateしました。
+ですが、昨日、deprecateしました。
 
-初めてリリースしたnpmモジュールが即deprecateでなんとも情けない結果です。名前空間を一つ無駄にしてすいません。
+初めてリリースしたnpmモジュールが即deprecateとなり、なんとも情けない結果です。名前空間を一つ無駄にしてすいません。
 ここでいくつかのことを紹介、あるいは供養をしたいと思います。
 
-## TODO: 見出し
+## HonoだけでBuilderパターン
 
 やりたいことは次の通りです。
 
@@ -27,9 +27,11 @@ published: false
   - やるかどうかは別として、feature1-server.ts, feature2-server.ts といった機能単位の分割であろうと容易にしたい
 
 この要件を達するのに、複数のルーティング定義を材料にして Hono インスタンスをつくるBuilderがあれば良かろうと思って、hono-builderを作り始めました。
-結局、このBuilderパターンのアプローチは、**Honoだけで実現できる**ので、拙作のhono-builderはdeprecateしました。
+結局、このBuilderパターンのアプローチは、**Honoだけで実現できた**ので、拙作のhono-builderはdeprecateしました。
 
-どう実現するのか深堀りしたいと思います。次は、想定されるディレクトリ構成です。
+どう実現するのか深堀りしたいと思います。
+
+以下は想定されるディレクトリ構成です。
 
 ```bash
 src/
@@ -49,7 +51,7 @@ src/
 
 ```
 
-まず、`src/builder.ts` は核になるbuilderを提供します。ここで、Honoのmiddlewareをあれこれ設定します。
+まず、`src/builder.ts` は核になるbuilderオブジェクトを提供します。実態はHonoそのものです。ここで、Honoのmiddlewareやらサーバー共通の内容をあれこれ設定します。
 
 ```typescript:src/builder.ts
 import { Hono } from 'hono'
@@ -66,7 +68,7 @@ export default builder
 ルーティング定義は、このbuilderを利用して、`src/routes/` 以下の各ファイルで行います。
 例えば、`src/routes/root.tsx` では次のように定義します。Honoの簡潔な書き味ままで、ルーティング定義できて嬉しいです。
 
-```typescript
+```typescript:src/routes/root.tsx
 import app from '../builder'
 
 app.get('/', (c) => {
@@ -75,8 +77,7 @@ app.get('/', (c) => {
 ```
 
 こうやって定義したルーティングを、`src/app-server.ts` や `src/api-server.ts` といったサーバーのエンドポイントでimportします。
-Honoの
-て、Honoのアプリケーションを構築します。
+目的に沿ったルーティング定義だけ読み込むのが肝心なところです。こうやって必要なルーティングなだけ生えたHonoインスタンスを構築します。
 
 ```typescript:src/app-server.ts
 import './routes/_404'
@@ -85,7 +86,6 @@ import './routes/root'
 import './routes/todos'
 
 import app from './builder'
-
 export default app
 ```
 
@@ -93,22 +93,20 @@ export default app
 import './routes/api/_404'
 import './routes/api/_error'
 
-// d
+// viteで一括取得するのもあり
 import.meta.glob('./routes/api/**/!(_*|$*|*.test|*.spec).(ts|tsx)', { eager: true })
 
 import app from './builder'
-
 export default app
 ```
 
-マルチエンドポイントは、エッジ環境を意識しています。
-必要最低限のルーティングだけをもったエンドポイントであれば、
-サーバーの起動時間に寄与するのではないかと思ったからです。
-
-
-この実装パターンの動作例は次のリポジトリで確認できます。
+やりたいことは、これで実現できました。動作例は次のリポジトリで確認できます。
 
 - https://github.com/kfly8-sandbox/hono-vite-rsc-shadcnui
+
+注意点としては、開発サーバーでHMRするために、builderオブジェクトの読み込み直しをこんな感じで、hotUpdateに設定すること必要があります。
+
+TODO
 
 ## 2. JavaScript Proxy + type assertionによる型安全なI/F制御
 
