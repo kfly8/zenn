@@ -6,6 +6,11 @@ topics: ['Hono', 'TypeScript']
 published: false
 ---
 
+書いていて、↓だめ。こうするのが一番いいや...
+https://github.com/kfly8-sandbox/sample-hono-routing
+
+---
+
 こんにちは。kobakenです。
 
 先日、[hono-builder](https://www.npmjs.com/package/hono-builder)というnpmモジュールをリリースしました。ですが、昨日、deprecateしました。
