@@ -1,14 +1,14 @@
 ---
 title: "Honoでインタラクティブなコンポーネントを作る時、React Server Componentsが良いと思った"
 emoji: "🐥"
-type: "idea" # tech: 技術記事 / idea: アイデア
+type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["Hono", "React", "RSC" ]
 published: true
 ---
 
 # 追記
 
-さっとHonoでRSCを動かせるようにボイラープレートを用意しました。
+HonoでRSCをさっと動かせるようにボイラープレートを用意しました。
 
 https://github.com/kfly8/boilerplate-hono-vite-rsc
 
