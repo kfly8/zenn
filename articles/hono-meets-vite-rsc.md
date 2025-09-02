@@ -3,7 +3,7 @@ title: "Honoでインタラクティブなコンポーネントを作る時、Re
 emoji: "🐥"
 type: "idea" # tech: 技術記事 / idea: アイデア
 topics: ["Hono", "React", "RSC" ]
-published: false
+published: true
 ---
 
 こんにちは。kobakenです。
