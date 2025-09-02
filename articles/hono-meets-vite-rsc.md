@@ -1,5 +1,5 @@
 ---
-title: "Honoでインタラクティブなコンポーネントを作る時、React Server Componentsが良いと思った"
+title: "Honoでインタラクティブなコンポーネントを作る時、React Server Componentsが良いと思った【ボイラープレートを追加】"
 emoji: "🐥"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["Hono", "React", "RSC" ]
