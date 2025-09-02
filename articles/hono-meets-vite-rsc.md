@@ -6,6 +6,14 @@ topics: ["Hono", "React", "RSC" ]
 published: true
 ---
 
+# 追記
+
+さっとHonoでRSCを動かせるようにボイラープレートを用意しました。
+
+https://github.com/kfly8/boilerplate-hono-vite-rsc
+
+---
+
 こんにちは。kobakenです。
 
 ![DEMO](/images/hono-meets-vite-rsc/demo.gif)
