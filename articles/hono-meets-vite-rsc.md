@@ -20,7 +20,7 @@ https://github.com/kfly8/boilerplate-hono-vite-rsc
 
 Honoでこんな感じのインタラクティブなコンポーネントを作りたい場合、CSR、HonoX、[自前でハイドレーション](https://zenn.dev/kfly8/articles/sample-island-architecture-using-hono)、またはNext.js, Wakuなどのフレームワークを利用すると思います。
 
-今回、[React Server Components](https://react.dev/reference/rsc/server-components)(以下、RSC)を試して、良かった点を3つ紹介します。
+今回、Honoでインタラクティブなコンポーネントを作るのに、[React Server Components](https://react.dev/reference/rsc/server-components)(以下、RSC)を試して、良かった点を3つ紹介します。
 
 ### 1. `use client` ディレクティブによるエラー検知
 
@@ -48,7 +48,7 @@ Honoはホントに軽量で、何か気になったことがあればソース�
 
 https://github.com/kfly8-sandbox/hono-vite-rsc-shadcnui
 
-RSC Payloadのencode/decodeやその実行など、RSC自身の複雑さはあるのですが..! / インタラクティブなコンポーネントを作ることに目的を絞れば、複雑さは下がる思います。
+RSC Payloadのencode/decodeやその実行など、RSC自身の複雑さはあるのですが..! インタラクティブなコンポーネントを作ることに目的を絞れば、複雑さは下がる思います。
 
 ### 3. サーバーサイドとフロントエンドの垣根が低い
 
@@ -59,7 +59,7 @@ RSC Payloadのencode/decodeやその実行など、RSC自身の複雑さはあ�
 
 ---
 
-その他、UIを全部Reactにお任せできていることはメリットだと思いました。Next.jsやHonoXなどフレームワークを利用していると、Reactだけでなく、そちらの知識も人間やAIエージェントに吸収してもらってUIを書くことになると思いますが、今回、Honoの知識なくとも、UIを書けて良いと思いました。
+その他、UIを全部Reactにお任せできていることはメリットだと思いました。Next.jsやHonoXなどフレームワークを利用していると、Reactだけでなく、そちらの知識も人間やAIエージェントに吸収してもらってUIを書くことになると思いますが、今回、Honoの知識なくとも、UIを書けて良いと思いました。(storybookをclaude codeに書かせて、こう感じた）
 
 Honoをベースにしているので、Cloudflare Workersなどエッジサーバーにデプロイしやすかったり、Hono関連のmiddlewareを利用しやすいのも嬉しいポイントです！
 
