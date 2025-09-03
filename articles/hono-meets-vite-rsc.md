@@ -20,7 +20,7 @@ https://github.com/kfly8/boilerplate-hono-vite-rsc
 
 Honoでこんな感じのインタラクティブなコンポーネントを作りたい場合、CSR、HonoX、[自前でハイドレーション](https://zenn.dev/kfly8/articles/sample-island-architecture-using-hono)、またはNext.js, Wakuなどのフレームワークを利用すると思います。
 
-今回、Honoでインタラクティブなコンポーネントを作るのに、[React Server Components](https://react.dev/reference/rsc/server-components)(以下、RSC)を試して、良かった点を3つ紹介します。
+今回、Honoでインタラクティブなコンポーネントを作るのに、[React Server Components](https://react.dev/reference/rsc/server-components)(以下、RSC)を利用して、良かった点を3つ紹介します。
 
 ### 1. `use client` ディレクティブによるエラー検知
 
